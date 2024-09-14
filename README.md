@@ -31,7 +31,7 @@ MetadataExtractor:
 
 ```mathematica
 
-    Install-Package MetadataExtractor
+Install-Package MetadataExtractor
 ```
 
 Additionally, add a reference to System.Windows.Forms:
