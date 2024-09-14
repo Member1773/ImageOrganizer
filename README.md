@@ -1,8 +1,8 @@
 # ImageOrganizer
 
-## Sort images by date and filetype/Import images from a camera.
+### Sort images by date and filetype/Import images from a camera.
 
-Development:
+#### Development:
 
 Please make sure to install the required NuGet packages:
 
