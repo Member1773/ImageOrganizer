@@ -113,6 +113,7 @@ namespace ImageOrganizer
                         AnsiConsole.MarkupLine($"[green]Default export path updated to:[/] {exportPath}");
                         AnsiConsole.MarkupLine("Press any key to return to settings menu.");
                         Console.ReadKey();
+                        back = true;
                     }
                     else
                     {

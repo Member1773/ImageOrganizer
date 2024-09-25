@@ -13,7 +13,13 @@ namespace ImageOrganizer
             // If DefaultExportPath is not set, prompt the user to set it
             if (string.IsNullOrEmpty(ConfigurationManager.Settings.DefaultExportPath) || !System.IO.Directory.Exists(ConfigurationManager.Settings.DefaultExportPath))
             {
+                // Inform the user about supported formats
+                AnsiConsole.MarkupLine("[green]All common image formats are selected by default.[/]");
+                AnsiConsole.MarkupLine("If you want to exclude or add formats, you can do so via the settings menu.\n");
+                //set default export path
                 AnsiConsole.MarkupLine("[yellow]Default Export Path is not set or does not exist.[/]");
+                AnsiConsole.MarkupLine("Press any key to set it now.");
+                Console.ReadKey();
                 SettingsManager.SetDefaultExportPath();
             }
 

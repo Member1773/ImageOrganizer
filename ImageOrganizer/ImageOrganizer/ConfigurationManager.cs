@@ -25,10 +25,10 @@ namespace ImageOrganizer
             }
             else
             {
-                // Default configuration
+                // Default configuration with all common image formats selected
                 Settings = new AppSettings
                 {
-                    SupportedFormats = new List<string> { ".JPG", ".RAF" },
+                    SupportedFormats = GetAllCommonFormats(),
                     DefaultExportPath = "",
                     DeviceImportFolder = "" // Default to empty
                 };
@@ -40,6 +40,19 @@ namespace ImageOrganizer
         {
             string json = JsonConvert.SerializeObject(Settings, Formatting.Indented);
             File.WriteAllText("appsettings.json", json);
+        }
+
+        private static List<string> GetAllCommonFormats()
+        {
+            // List of common compressed and raw image formats
+            var compressedFormats = new List<string> { ".JPG", ".JPEG", ".PNG", ".BMP", ".GIF", ".TIFF" };
+            var rawFormats = new List<string> { ".RAW", ".RAF", ".CR2", ".NEF", ".DNG", ".ARW", ".SR2", ".ORF", ".PEF" };
+
+            var allFormats = new List<string>();
+            allFormats.AddRange(compressedFormats);
+            allFormats.AddRange(rawFormats);
+
+            return allFormats;
         }
     }
 }
