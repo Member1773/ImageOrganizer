@@ -50,5 +50,24 @@ namespace ImageOrganizer
             DateTime creationDate = File.GetCreationTime(filePath);
             return creationDate.ToString("yyyy-MM-dd");
         }
+        
+        public static string GetUniqueFilePath(string filePath)
+        {
+            string directory = Path.GetDirectoryName(filePath);
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
+            string extension = Path.GetExtension(filePath);
+
+            int count = 1;
+            string newFullPath = filePath;
+
+            while (File.Exists(newFullPath))
+            {
+                string tempFileName = $"{fileName}({count++})";
+                newFullPath = Path.Combine(directory, tempFileName + extension);
+            }
+
+            return newFullPath;
+        }
+
     }
 }

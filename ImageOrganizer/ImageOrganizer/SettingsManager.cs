@@ -91,17 +91,26 @@ namespace ImageOrganizer
 
         public static void SetDefaultExportPath()
         {
+            var choice = "";
             bool back = false;
             while (!back)
             {
                 AnsiConsole.Clear();
                 string currentPath = string.IsNullOrEmpty(ConfigurationManager.Settings.DefaultExportPath) ? "[[Not Set]]" : ConfigurationManager.Settings.DefaultExportPath;
+                if (currentPath == "[[Not Set]]")
+                {
+                    choice = "Yes";
+                }
+                else
+                {
+                   choice = AnsiConsole.Prompt(
+                   new SelectionPrompt<string>()
+                       .Title("Do you want to change it?")
+                       .AddChoices(new[] { "Yes", "No", "Go Back" }));
+                }
                 AnsiConsole.MarkupLine($"[green]Current Default Export Path:[/] {currentPath}");
 
-                var choice = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                        .Title("Do you want to change it?")
-                        .AddChoices(new[] { "Yes", "No", "Go Back" }));
+               
 
                 if (choice == "Yes")
                 {
@@ -145,11 +154,11 @@ namespace ImageOrganizer
 
                 if (choice == "Yes")
                 {
-                    string input = AnsiConsole.Ask<string>("Enter new device import folder path (e.g., \\Internal Storage\\DCIM):");
+                    string input = Utilities.SelectFolderDialog();
 
                     if (!string.IsNullOrWhiteSpace(input))
                     {
-                        ConfigurationManager.Settings.DeviceImportFolder = input.Trim();
+                        ConfigurationManager.Settings.DeviceImportFolder = input;
                         ConfigurationManager.SaveConfig();
                         AnsiConsole.MarkupLine("[green]Device import folder updated.[/]");
                         AnsiConsole.MarkupLine("Press any key to return to settings menu.");
