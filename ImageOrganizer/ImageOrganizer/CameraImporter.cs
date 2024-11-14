@@ -290,7 +290,7 @@ namespace ImageOrganizer
                     else
                     {
                         // Navigate into the selected directory
-                        currentPath = Path.Combine(currentPath, choice);
+                        if (currentPath != null) currentPath = Path.Combine(currentPath, choice);
                     }
                 }
             }

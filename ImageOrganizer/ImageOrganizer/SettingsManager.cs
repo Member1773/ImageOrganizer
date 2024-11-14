@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Spectre.Console;
 
 namespace ImageOrganizer
@@ -9,20 +10,22 @@ namespace ImageOrganizer
     {
         public static void ConfigureSettings()
         {
-            bool back = false;
-
-            while (!back)
+            bool exit = false;
+            while (!exit)
             {
                 AnsiConsole.Clear();
+                var options = new List<string>()
+                {
+                    "Supported Formats",
+                    "Default Export Path",
+                    "Device Import Folder",
+                    "Check for Updates",
+                    "Back to Main Menu"
+                };
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("[green]Settings:[/]")
-                        .AddChoices(new[] {
-                            "Supported Formats",
-                            "Default Export Path",
-                            "Device Import Folder",
-                            "Back to Main Menu"
-                        }));
+                        .AddChoices(options));
 
                 switch (choice)
                 {
@@ -35,8 +38,14 @@ namespace ImageOrganizer
                     case "Device Import Folder":
                         ConfigureDeviceImportFolder();
                         break;
+                    case "Check for Updates":
+                        AnsiConsole.MarkupLine("[green]Checking for updates...[/]");
+                        Task.Run(async () => await Program.CheckForUpdates(manualCheck: true)).GetAwaiter().GetResult();
+                        AnsiConsole.MarkupLine("Press any key to return to settings menu.");
+                        Console.ReadKey();
+                        break;
                     case "Back to Main Menu":
-                        back = true;
+                        exit = true;
                         break;
                 }
             }
@@ -97,21 +106,19 @@ namespace ImageOrganizer
             {
                 AnsiConsole.Clear();
                 string currentPath = string.IsNullOrEmpty(ConfigurationManager.Settings.DefaultExportPath) ? "[[Not Set]]" : ConfigurationManager.Settings.DefaultExportPath;
+                AnsiConsole.MarkupLine($"[green]Current Default Export Path:[/] {currentPath}");
                 if (currentPath == "[[Not Set]]")
                 {
                     choice = "Yes";
                 }
                 else
-                {
+                { 
                    choice = AnsiConsole.Prompt(
                    new SelectionPrompt<string>()
                        .Title("Do you want to change it?")
                        .AddChoices(new[] { "Yes", "No", "Go Back" }));
                 }
-                AnsiConsole.MarkupLine($"[green]Current Default Export Path:[/] {currentPath}");
-
-               
-
+                
                 if (choice == "Yes")
                 {
                     string exportPath = Utilities.SelectFolderDialog();

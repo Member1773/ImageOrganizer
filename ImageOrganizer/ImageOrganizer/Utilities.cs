@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using MetadataExtractor;
 using MetadataExtractor.Formats.Exif;
@@ -12,19 +13,26 @@ namespace ImageOrganizer
         public static string SelectFolderDialog()
         {
             string folderPath = null;
-            using (var folderDialog = new FolderBrowserDialog())
+            var thread = new Thread(() =>
             {
-                folderDialog.Description = "Select a folder";
-                // The property 'UseDescriptionForTitle' is deprecated and no longer needs to be set
-
-                // Show the dialog
-                DialogResult result = folderDialog.ShowDialog();
-
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderDialog.SelectedPath))
+                using (var folderDialog = new FolderBrowserDialog())
                 {
-                    folderPath = folderDialog.SelectedPath;
+                    folderDialog.Description = "Select a folder";
+
+                    // Show the dialog
+                    DialogResult result = folderDialog.ShowDialog();
+
+                    if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderDialog.SelectedPath))
+                    {
+                        folderPath = folderDialog.SelectedPath;
+                    }
                 }
-            }
+            });
+
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+
             return folderPath;
         }
 
@@ -63,7 +71,7 @@ namespace ImageOrganizer
             while (File.Exists(newFullPath))
             {
                 string tempFileName = $"{fileName}({count++})";
-                newFullPath = Path.Combine(directory, tempFileName + extension);
+                if (directory != null) newFullPath = Path.Combine(directory, tempFileName + extension);
             }
 
             return newFullPath;
