@@ -2,6 +2,11 @@
 
 ### Sort images by date and filetype/Import images from a camera.
 
+#### Current feature:
+> Import images from a camera (Automatically search for folders with images or manual selection) <br>
+> Sort images in a folder <br>
+> Select formats to include <br>
+
 #### Development:
 
 Please make sure to install the required NuGet packages:
